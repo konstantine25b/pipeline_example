@@ -1,10 +1,10 @@
-import argparse
 import csv
-import time
+import os
 from datetime import datetime
 from pathlib import Path
 
 import requests
+from flask import Flask, jsonify, request
 
 
 def fetch_nbg_currencies(url: str):
@@ -57,22 +57,24 @@ def run_once(url: str, csv_path: Path):
     append_records_to_csv(csv_path, records)
 
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--url", default="https://nbg.gov.ge/gw/api/ct/monetarypolicy/currencies/en/json")
-    parser.add_argument("--interval-minutes", type=float, default=5.0)
-    parser.add_argument("--csv-path", type=str, default="data/nbg_currencies.csv")
-    parser.add_argument("--once", action="store_true")
-    args = parser.parse_args()
-    csv_path = Path(args.csv_path)
+app = Flask(__name__)
+
+
+@app.get("/currencies")
+def currencies():
+    url = request.args.get("url", default="https://nbg.gov.ge/gw/api/ct/monetarypolicy/currencies/en/json")
+    csv_path_str = request.args.get("csv_path", default="data/nbg_currencies.csv")
+    csv_path = Path(csv_path_str)
     if not csv_path.parent.exists():
         csv_path.parent.mkdir(parents=True, exist_ok=True)
-    if args.once:
-        run_once(args.url, csv_path)
-        return
-    while True:
-        run_once(args.url, csv_path)
-        time.sleep(args.interval_minutes * 60)
+    records = fetch_nbg_currencies(url)
+    append_records_to_csv(csv_path, records)
+    return jsonify(records)
+
+
+def main():
+    port = int(os.environ.get("PORT", "8000"))
+    app.run(host="0.0.0.0", port=port)
 
 
 if __name__ == "__main__":

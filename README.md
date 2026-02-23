@@ -37,7 +37,7 @@ venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 ```
 
-### Usage
+### Usage (local script)
 
 Run the pipeline once (fetch data one time and exit):
 
@@ -61,6 +61,28 @@ python nbg_pipeline.py --interval-minutes 1
 ```
 
 The CSV file will be written to `data/nbg_currencies.csv`. Each run appends the latest values for all currencies, including timestamps.
+
+### Usage as HTTP API
+
+Start the Flask API locally:
+
+```bash
+source venv/bin/activate
+python nbg_pipeline.py
+```
+
+By default it will listen on port `8000` on `localhost`. You can then call:
+
+```bash
+curl "http://localhost:8000/currencies"
+```
+
+Optional query parameters:
+
+- `url`: override the NBG endpoint
+- `csv_path`: change where the CSV is written (default `data/nbg_currencies.csv`)
+
+Each request fetches fresh data from the NBG API, appends it to the CSV file, and returns the JSON records.
 
 ### Run with Docker
 
@@ -92,5 +114,11 @@ docker run --name nbg-currency-pipeline \
   nbg-currency-pipeline
 ```
 
-You can host this container image on a free container hosting platform (for example, Render, Railway, or Fly.io) and run it as a long-running service using the same `docker run` command parameters as above translated into their UI or configuration.
+You can host this container image on a free container hosting platform (for example, Render, Railway, or Fly.io). For platforms like Railway, set the start command to:
+
+```bash
+python nbg_pipeline.py
+```
+
+The service will listen on the port provided by the platform (via the `PORT` environment variable) and expose the `/currencies` endpoint for your other applications to call.
 
