@@ -84,6 +84,20 @@ Optional query parameters:
 
 Each request fetches fresh data from the NBG API, appends it to the CSV file, and returns the JSON records.
 
+Hosted example on Railway (JSON and CSV):
+
+- JSON:
+
+```bash
+curl "https://pipelineexample-production.up.railway.app/currencies"
+```
+
+- CSV (also writes on the server to `data/nbg_currencies.csv` and downloads locally to `nbg_currencies.csv`):
+
+```bash
+curl "https://pipelineexample-production.up.railway.app/currencies.csv?csv_path=data/nbg_currencies.csv" -o nbg_currencies.csv
+```
+
 ### Run with Docker
 
 Build the Docker image:
