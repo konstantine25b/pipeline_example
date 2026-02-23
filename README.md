@@ -62,3 +62,35 @@ python nbg_pipeline.py --interval-minutes 1
 
 The CSV file will be written to `data/nbg_currencies.csv`. Each run appends the latest values for all currencies, including timestamps.
 
+### Run with Docker
+
+Build the Docker image:
+
+```bash
+cd /Users/konstantine25b/Desktop/pipeline_example
+docker build -t nbg-currency-pipeline .
+```
+
+Run the container (default interval 5 minutes):
+
+```bash
+docker run --name nbg-currency-pipeline nbg-currency-pipeline
+```
+
+Run with a custom interval (for example, every 1 minute):
+
+```bash
+docker run --name nbg-currency-pipeline-1m nbg-currency-pipeline python nbg_pipeline.py --interval-minutes 1
+```
+
+Persist CSV data on the host machine:
+
+```bash
+mkdir -p data
+docker run --name nbg-currency-pipeline \
+  -v "$(pwd)/data:/app/data" \
+  nbg-currency-pipeline
+```
+
+You can host this container image on a free container hosting platform (for example, Render, Railway, or Fly.io) and run it as a long-running service using the same `docker run` command parameters as above translated into their UI or configuration.
+
