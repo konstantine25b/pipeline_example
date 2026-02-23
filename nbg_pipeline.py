@@ -1,10 +1,11 @@
 import csv
+import io
 import os
 from datetime import datetime
 from pathlib import Path
 
 import requests
-from flask import Flask, jsonify, request
+from flask import Flask, Response, jsonify, request
 
 
 def fetch_nbg_currencies(url: str):
@@ -70,6 +71,25 @@ def currencies():
     records = fetch_nbg_currencies(url)
     append_records_to_csv(csv_path, records)
     return jsonify(records)
+
+
+@app.get("/currencies.csv")
+def currencies_csv():
+    url = request.args.get("url", default="https://nbg.gov.ge/gw/api/ct/monetarypolicy/currencies/en/json")
+    csv_path_str = request.args.get("csv_path", default="data/nbg_currencies.csv")
+    csv_path = Path(csv_path_str)
+    if not csv_path.parent.exists():
+        csv_path.parent.mkdir(parents=True, exist_ok=True)
+    records = fetch_nbg_currencies(url)
+    append_records_to_csv(csv_path, records)
+    if not records:
+        return Response("", mimetype="text/csv")
+    output = io.StringIO()
+    fieldnames = list(records[0].keys())
+    writer = csv.DictWriter(output, fieldnames=fieldnames)
+    writer.writeheader()
+    writer.writerows(records)
+    return Response(output.getvalue(), mimetype="text/csv", headers={"Content-Disposition": "attachment; filename=nbg_currencies.csv"})
 
 
 def main():
