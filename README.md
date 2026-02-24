@@ -37,7 +37,7 @@ venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 ```
 
-### Usage (local script)
+### Usage (local script with API)
 
 Run the pipeline once (fetch data one time and exit):
 
@@ -61,6 +61,33 @@ python nbg_pipeline.py --interval-minutes 1
 ```
 
 The CSV file will be written to `data/nbg_currencies.csv`. Each run appends the latest values for all currencies, including timestamps.
+
+### Usage (CSV-only script, no API)
+
+If you only want to fetch NBG data and write it to a local CSV file (without starting the Flask API), use `nbg_csv_pipeline.py`:
+
+Run once and exit:
+
+```bash
+source venv/bin/activate
+python nbg_csv_pipeline.py --once
+```
+
+Run in a loop every 5 minutes (default interval):
+
+```bash
+source venv/bin/activate
+python nbg_csv_pipeline.py
+```
+
+Change the interval (for example, every 1 minute):
+
+```bash
+source venv/bin/activate
+python nbg_csv_pipeline.py --interval-minutes 1
+```
+
+By default, the CSV file will be written to `data/nbg_currencies.csv`. You can override this path with `--csv-path`.
 
 ### Usage as HTTP API
 
