@@ -1,0 +1,15 @@
+user_id,email,status,updated_at,is_deleted
+U1002,mariam@demo.ge,inactive,2026-02-16 08:00:00,False
+U1003,gio@demo.ge,active,2026-02-14 12:00:00,False
+U1004,salome.new@demo.ge,active,2026-02-16 09:15:00,False
+U1005,dato@demo.ge,blocked,2026-02-16 07:50:00,True
+U1006,ana@demo.ge,inactive,2026-02-16 09:00:00,False
+U1006,ana@demo.ge,active,2026-02-16 09:05:00,False
+U1007,luka@demo.ge,active,2026-02-16 09:10:00,True
+U1007,luka@demo.ge,blocked,2026-02-16 09:20:00,False
+U1009,teo@demo.ge,active,2026-02-16 08:30:00,False
+U1010,tina@demo.ge,active,2026-02-16 08:45:00,False
+U1010,tina@demo.ge,inactive,2026-02-16 08:40:00,False
+U1001,nika@demo.ge,active,2026-02-16 10:00:00,False
+U1008,elene@demo.ge,inactive,2026-02-16 07:00:00,True
+U1011,bad_email_without_at,active,2026-02-16 09:00:00,False
