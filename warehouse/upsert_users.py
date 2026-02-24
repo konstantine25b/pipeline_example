@@ -86,7 +86,7 @@ def process_upsert_efficient(delta_df, parquet_file, total_users_in_db):
     metrics['added'] = len(new_user_ids)
     metrics['updated'] = actually_updated
     metrics['deleted'] = len(deleted_user_ids & existing_user_ids)
-    metrics['unchanged'] = total_users_in_db - len(new_user_ids) - actually_updated - metrics['deleted']
+    metrics['unchanged'] = total_users_in_db - actually_updated - metrics['deleted']
     
     print(f"  - New users to add: {len(new_user_ids)}")
     print(f"  - Existing users actually updated: {actually_updated}")
