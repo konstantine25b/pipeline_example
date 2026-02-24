@@ -89,6 +89,55 @@ python nbg_csv_pipeline.py --interval-minutes 1
 
 By default, the CSV file will be written to `data/nbg_currencies.csv`. You can override this path with `--csv-path`.
 
+### Usage (Historical data - last 2 weeks, replace mode)
+
+If you want to fetch the **last 14 days** of NBG currency data and **replace** the CSV file each time (not append), use `nbg_historical_pipeline.py`:
+
+Run once and exit:
+
+```bash
+source venv/bin/activate
+python nbg_historical_pipeline.py --once
+```
+
+Run in a loop every 24 hours (default interval):
+
+```bash
+source venv/bin/activate
+python nbg_historical_pipeline.py
+```
+
+Change the interval or number of days:
+
+```bash
+source venv/bin/activate
+python nbg_historical_pipeline.py --interval-hours 12 --days 7
+```
+
+By default, the CSV file will be written to `data/nbg_currencies_historical.csv`. You can override this path with `--csv-path`. **Note:** This script **overwrites** the entire file each time it runs (it does not append).
+
+The generated CSV includes a `weekday` column (e.g., "Monday", "Tuesday") derived from the `as_of_date`. NBG publishes rates Monday through Saturday; Sundays are not included (but can be forward-filled using the next script).
+
+### Usage (Forward-fill weekends)
+
+To create a complete dataset with **all 7 days of the week** (where Sunday uses Friday's rates), use `nbg_forward_fill.py`:
+
+```bash
+source venv/bin/activate
+python nbg_forward_fill.py
+```
+
+This reads `data/nbg_currencies_historical.csv` and writes `data/nbg_currencies_filled.csv` with Sunday data forward-filled from the previous Friday.
+
+Custom paths:
+
+```bash
+source venv/bin/activate
+python nbg_forward_fill.py --input-csv data/nbg_currencies_historical.csv --output-csv data/my_filled_data.csv
+```
+
+**Note:** NBG publishes rates Monday-Saturday. This script adds Sunday records by copying Friday's rates with updated `as_of_date` and `weekday` fields.
+
 ### Usage as HTTP API
 
 Start the Flask API locally:
