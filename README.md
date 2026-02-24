@@ -14,7 +14,7 @@ This is a simple local pipeline that periodically fetches currency exchange data
 1. Open a terminal and go to the project directory:
 
 ```bash
-cd /Users/konstantine25b/Desktop/pipeline_example
+cd ./pipeline_example
 ```
 
 2. Create and activate a virtual environment:
